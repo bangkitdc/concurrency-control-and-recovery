@@ -148,7 +148,7 @@ class OCC():
 def main():
     try:
         parser = argparse.ArgumentParser(description="Optimistic Concurrency Control Simulation")
-        parser.add_argument('input', type=str, help="Input string with commands")
+        parser.add_argument('input', type=str, help="Input string of transactions to be scheduled")
 
         args = parser.parse_args()
         

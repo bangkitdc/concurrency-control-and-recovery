@@ -32,8 +32,19 @@ example:
   python mvcc.py mvcc_tc1.txt
 ```
 
-2. occ.py
+2. OCC.py
+```
+Go to ./occ
+usage: python OCC.py input
 
+Optimistic Concurrency Control Simulation
+
+positional arguments:
+  input       Input string of transactions to be scheduled
+
+example:
+  python OCC.py "R1(A);W1(A);R2(C);W2(A);R3(B);W3(C);R4(D);W4(D);C1;C2;C3;C4"
+```
 Our program accepts input in the form of `R1(X); W2(Y); W2(Z); W3(A); W3(B); C1; C2; C3;`
 
 ## Copyright
