@@ -92,7 +92,6 @@ class OCC():
             if(action[0].upper()=='C'):
                 self.cmdQ.append([action[0].upper(),action[1:],None])
                 continue
-            print(action)
             bropen = action.index('(')
             brclose = action.index(')')
             #validate string format, throw exceeption if invalid
