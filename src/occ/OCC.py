@@ -3,7 +3,7 @@ OPERATION_ID = 0
 RESOURCE_ID = 2
 FINISH = "finish"
 START = "start"
-
+VALIDATION = "validation"
 
 from typing import Dict, Type
 from Transaction import Transaction
@@ -24,7 +24,7 @@ class OCC():
     def checkTX(self, tx_id) -> None:
         if not self.txExist(tx_id):
             newTX = Transaction(tx_id)
-            newTX['start'] = self.time
+            newTX[START] = self.time
             self.T[tx_id] = newTX
             
     def write(self, tx_id):
@@ -42,7 +42,7 @@ class OCC():
         
         
     def commit(self, tx_id) -> None:
-        self.T[tx_id]['finish'] = self.time
+        self.T[tx_id][FINISH] = self.time
         print(f"Commit transaction-{tx_id}")
     
     def abort(self,tx_id) -> None:
@@ -52,9 +52,9 @@ class OCC():
         
         
     def valid_cond_1(self, tx_id, other_tx:Transaction) -> bool:
-        return other_tx['finish'] < self.T[tx_id]['start']
+        return other_tx[FINISH] < self.T[tx_id][START]
     def valid_cond_2(self,tx_id, other_tx: Transaction) -> bool:
-        return (self.T[tx_id]['start'] < other_tx['finish'] < self.T[tx_id]['validation']) and (len(other_tx.writeset.intersection(self.T[tx_id].readset))==0)
+        return (self.T[tx_id][START] < other_tx[FINISH] < self.T[tx_id][VALIDATION]) and (len(other_tx.writeset.intersection(self.T[tx_id].readset))==0)
     
     def validate(self, tx_id) -> bool:
         
@@ -64,10 +64,10 @@ class OCC():
         # 1. finishTS(Ti) < startTS(Tj)
         # 2. startTS(Tj) < finishTS(Ti) <  validation(Tj) 
         #    and write set of Ti does not intersect with read set of Tj
-        self.T[tx_id]['validation'] = self.time
+        self.T[tx_id][VALIDATION] = self.time
         valid = True
         for transaction in self.T.values():
-            if self.T[tx_id]['validation']<=transaction['validation']:
+            if self.T[tx_id][VALIDATION]<=transaction[VALIDATION]:
                 continue
             
             if not( (self.valid_cond_1(tx_id, transaction)) or (self.valid_cond_2(tx_id,transaction))):
@@ -99,7 +99,7 @@ class OCC():
             if (action[0].upper() !='R' and action[0].upper()!='W')\
                 or (bropen<1 or brclose<0)\
                 or    (brclose-bropen<2)\
-                    or (len(re.findall('(')!=1) and len(re.findall(')'!=1)) ):#Check if there are only one bracket each
+                    or action.count('(') != 1 or action.count(')') != 1:#Check if there are only one bracket each
                      
                 raise "Input Invalid"
                 # [operation, transactionID, resource]
@@ -142,8 +142,11 @@ try:
     # args = vars(parser.parse_args())
     # occ.parse("R1(B);R2(B);W2(B);R2(A);W2(A);R1(A);R2(A);C1;C2")
     # occ.parse("R1(users);R2(users);W2(users);W1(users);C2;C1")
-    occ.parse("R1(X);R2(Z);R1(Z);R3(X);R3(Y);W1(X);W3(Y);R2(Y);W2(Z);W2(Y);C1;C2;C3")
-    
+    # occ.parse("R1(X);R2(Z);R1(Z);R3(X);R3(Y);W1(X);W3(Y);R2(Y);W2(Z);W2(Y);C1;C2;C3")
+    # occ.parse("R1(book);R2(employee);R2(book);R1(employee);W1(book);W1(book);C1;W2(book);C2")
+    # occ.parse("R1(A); W2(A); C2; W1(A); C1")
+    # occ.parse("R1(B);R2(A);R1(A);R3(B);R3(C);W1(B);W3(C);R2(C);W2(A);W2(C);C1;C2;C3")
+    occ.parse("R1(A);W1(A);R2(C);W2(A);R3(B);W3(C);R4(D);W4(D);C1;C2;C3;C4")
     occ.run()   
 except Exception as e:
     print(str(e)) 
