@@ -87,22 +87,25 @@ class OCC():
             
                 
     def parse(self, text:str)->None:
-        sequence = text.replace(" ", "").split(";")
-        for action in sequence:
-            if(action[0].upper()=='C'):
-                self.cmdQ.append([action[0].upper(),action[1:],None])
-                continue
-            bropen = action.index('(')
-            brclose = action.index(')')
-            #validate string format, throw exceeption if invalid
-            if (action[0].upper() !='R' and action[0].upper()!='W')\
-                or (bropen<1 or brclose<0)\
-                or    (brclose-bropen<2)\
-                    or action.count('(') != 1 or action.count(')') != 1:#Check if there are only one bracket each
-                     
-                raise "Input Invalid"
-                # [operation, transactionID, resource]
-            self.cmdQ.append([action[0].upper(), action[1:bropen],action[bropen+1:brclose]])
+        try:
+            sequence = text.replace(" ", "").split(";")
+            for action in sequence:
+                if(action[0].upper()=='C'):
+                    self.cmdQ.append([action[0].upper(),action[1:],None])
+                    continue
+                bropen = action.index('(')
+                brclose = action.index(')')
+                #validate string format, throw exceeption if invalid
+                if (action[0].upper() !='R' and action[0].upper()!='W')\
+                    or (bropen<1 or brclose<0)\
+                    or    (brclose-bropen<2)\
+                        or action.count('(') != 1 or action.count(')') != 1:#Check if there are only one bracket each
+                        
+                    raise BaseException("Input Invalid")
+                    # [operation, transactionID, resource]
+                self.cmdQ.append([action[0].upper(), action[1:bropen],action[bropen+1:brclose]])
+        except: 
+            raise BaseException("Input Invalid")
             
             
             
@@ -127,7 +130,7 @@ class OCC():
                 #do commit     
                 self.validate(tx)
             else:
-                raise f"Invalid command: '{op}'"
+                raise BaseException(f"Invalid command: '{op}'")
 
             
                 
