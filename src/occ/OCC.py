@@ -135,21 +135,30 @@ class OCC():
 
 
 
-# parser = argparse.ArgumentParser(prog='Optimistic Concurency Control',description="This program simulates optimistic concurency control from read, write, and commit input")
-try:
-    occ = OCC()
-    # parser.add_argument('input')
-    # args = vars(parser.parse_args())
-    # occ.parse("R1(B);R2(B);W2(B);R2(A);W2(A);R1(A);R2(A);C1;C2")
-    # occ.parse("R1(users);R2(users);W2(users);W1(users);C2;C1")
-    # occ.parse("R1(X);R2(Z);R1(Z);R3(X);R3(Y);W1(X);W3(Y);R2(Y);W2(Z);W2(Y);C1;C2;C3")
-    # occ.parse("R1(book);R2(employee);R2(book);R1(employee);W1(book);W1(book);C1;W2(book);C2")
-    # occ.parse("R1(A); W2(A); C2; W1(A); C1")
-    # occ.parse("R1(B);R2(A);R1(A);R3(B);R3(C);W1(B);W3(C);R2(C);W2(A);W2(C);C1;C2;C3")
-    occ.parse("R1(A);W1(A);R2(C);W2(A);R3(B);W3(C);R4(D);W4(D);C1;C2;C3;C4")
-    occ.run()   
-except Exception as e:
-    print(str(e)) 
+
+# occ.parse("R1(B);R2(B);W2(B);R2(A);W2(A);R1(A);R2(A);C1;C2")
+# occ.parse("R1(users);R2(users);W2(users);W1(users);C2;C1")
+# occ.parse("R1(X);R2(Z);R1(Z);R3(X);R3(Y);W1(X);W3(Y);R2(Y);W2(Z);W2(Y);C1;C2;C3")
+# occ.parse("R1(book);R2(employee);R2(book);R1(employee);W1(book);W1(book);C1;W2(book);C2")
+# occ.parse("R1(A); W2(A); C2; W1(A); C1")
+# occ.parse("R1(B);R2(A);R1(A);R3(B);R3(C);W1(B);W3(C);R2(C);W2(A);W2(C);C1;C2;C3")
+# occ.parse("R1(A);W1(A);R2(C);W2(A);R3(B);W3(C);R4(D);W4(D);C1;C2;C3;C4")
+  
+
     
+def main():
+    try:
+        parser = argparse.ArgumentParser(description="Optimistic Concurrency Control Simulation")
+        parser.add_argument('input', type=str, help="Input string with commands")
+
+        args = parser.parse_args()
+        
+        occ = OCC()
+        occ.parse(args.input)
+        occ.run()
+    except Exception as e:
+        print(str(e))
+if __name__ == "__main__":
+    main()
     
     
